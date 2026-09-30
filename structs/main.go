@@ -1,57 +1,32 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"time"
-)
 
-type user struct {
-	firstName string
-	lastName  string
-	birthDate string
-	createdAt time.Time
-}
+	"example.com/structs/user"
+)
 
 func main() {
 	userFirstName := getUserData("Please enter your first name: ")
 	userLastName := getUserData("Please enter your last name: ")
 	userBirthDate := getUserData("Please enter your birthDate (MM/DD/YYYY): ")
 
-	var appUser *user
+	var appUser *user.User
+	appUser, error := user.New(userFirstName, userLastName, userBirthDate)
 
-	appUser, error := newUser(userFirstName, userLastName, userBirthDate)
+	admin := user.NewAdmin("test@example.com", "test123")
+	admin.User.OutputUserDetail()
+	admin.User.ClearUserName()
+	admin.User.OutputUserDetail()
 
 	if error != nil {
 		fmt.Println(error)
 		return
 	}
 
-	appUser.outputUserDetail()
-	appUser.clearUserName()
-	appUser.outputUserDetail()
-}
-
-func (u user) outputUserDetail() {
-	fmt.Println(u.firstName, u.lastName, u.birthDate)
-}
-
-func (u *user) clearUserName() {
-	u.firstName = ""
-	u.lastName = ""
-}
-
-func newUser(firstName, lastName, birthDate string) (*user, error) {
-	if firstName == "" || lastName == "" || birthDate == "" {
-		return nil, errors.New("Invalid user")
-	}
-
-	return &user{
-		firstName: firstName,
-		lastName:  lastName,
-		birthDate: birthDate,
-		createdAt: time.Now(),
-	}, nil
+	appUser.OutputUserDetail()
+	appUser.ClearUserName()
+	appUser.OutputUserDetail()
 }
 
 func getUserData(promptText string) string {
