@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	title, content := getNoteData()
-	userNote, err := note.New(title, content)
+	Title, Content := getNoteData()
+	userNote, err := note.New(Title, Content)
 	
 	if err != nil {
 		fmt.Println(err)
@@ -29,10 +29,10 @@ func main() {
 }
 
 func getNoteData() (string, string) {
-	title := getUserInput("Note title:")
-	content := getUserInput("Note content:")
+	Title := getUserInput("Note Title:")
+	Content := getUserInput("Note Content:")
 	
-	return title, content
+	return Title, Content
 }
 
 func getUserInput(prompt string) (string) {
