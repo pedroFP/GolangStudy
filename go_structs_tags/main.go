@@ -13,6 +13,6 @@ type User struct {
 
 func main()  {
 	t := reflect.TypeOf(User{})
-	f := t.Field(1).Tag.Get("json")
-	fmt.Printf(f)
+	f := t.Field(0).Tag.Get("json")
+	fmt.Printf(f) // 
 }
