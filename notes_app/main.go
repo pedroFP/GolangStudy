@@ -10,6 +10,10 @@ import (
 	"example.com/note_app/todo"
 )
 
+type saver interface { // convetion name for interfaces with one method
+	Save() error
+}
+
 func main() {
 	todoText := getUserInput("Todo Text: ")
 	todo, err := todo.New(todoText)
@@ -19,30 +23,38 @@ func main() {
 	}
 
 	todo.Display()
-	todo.Save()
-	if err != nil {
-		fmt.Println("Saving the note failed")
+
+	if saveData(todo) != nil {
 		return
 	}
 
-	fmt.Println("Saving the note secceeded!")
-
 	title, content := getNoteData()
 	userNote, err := note.New(title, content)
-	
+
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	userNote.Display()
-	userNote.Save()
-	if err != nil {
-		fmt.Println("Saving the note failed")
+
+	if saveData(userNote) != nil {
 		return
 	}
 
+}
+
+func saveData(data saver) error {
+	err := data.Save()
+
+	if err != nil {
+		fmt.Println("Saving the note failed")
+		return err
+	}
+
 	fmt.Println("Saving the note secceeded!")
+
+	return nil
 }
 
 
