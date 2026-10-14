@@ -14,9 +14,23 @@ type saver interface { // convetion name for interfaces with one method
 	Save() error
 }
 
+type outputtable interface {
+	saver
+	Display()
+}
+
+func foo(value interface{}) {
+	typedVal, ok := value.(string)
+	fmt.Println("typedVal:", typedVal)
+	fmt.Println("ok:", ok)
+}
+
 func main() {
 	todoText := getUserInput("Todo Text: ")
 	todo, err := todo.New(todoText)
+
+	foo(todo)
+
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -30,7 +44,6 @@ func main() {
 
 	title, content := getNoteData()
 	userNote, err := note.New(title, content)
-
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -41,12 +54,10 @@ func main() {
 	if saveData(userNote) != nil {
 		return
 	}
-
 }
 
 func saveData(data saver) error {
 	err := data.Save()
-
 	if err != nil {
 		fmt.Println("Saving the note failed")
 		return err
@@ -57,27 +68,25 @@ func saveData(data saver) error {
 	return nil
 }
 
-
 func getNoteData() (string, string) {
 	Title := getUserInput("Note Title:")
 	Content := getUserInput("Note Content:")
-	
+
 	return Title, Content
 }
 
-func getUserInput(prompt string) (string) {
+func getUserInput(prompt string) string {
 	fmt.Printf("%v ", prompt)
-	
+
 	reader := bufio.NewReader(os.Stdin)
 
 	text, err := reader.ReadString('\n')
-
 	if err != nil {
 		return ""
 	}
 
 	text = strings.TrimSuffix(text, "\n")
 	text = strings.TrimSuffix(text, "\r") // on windows machines line breaks are \n\r
-	
+
 	return text
 }
